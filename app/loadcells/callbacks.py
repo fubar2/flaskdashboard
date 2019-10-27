@@ -8,6 +8,7 @@ import pandas as pd
 import json
 from textwrap import dedent as d
 import flask
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -31,7 +32,14 @@ from .loadcelldata import loadCellDataMulti
 NSD=2
 def register_callbacks(dashapp):
 
-    def figUpdate(useFrac,filePath, meanCenter):
+    def figUpdate(useFrac,filePath, meanCenter, movMedian):
+        """
+        dcc.Store(id='localstore', storage_type='session',
+                data={'filePath': filePath, 'useFrac': 1, 'centerdata': False, 'movmedian': False}),
+        """
+        flask.session['filePath'] = filePath
+        flask.session['centerdata'] = meanCenter
+        flask.session['fmovmedian'] = movMedian
         lcd = loadCellDataMulti(NSD,filePath)
         datal = []
         for i, df in enumerate(lcd.dfs):
@@ -49,6 +57,7 @@ def register_callbacks(dashapp):
                 useFrac = 0.0001
             elif useFrac >= 0.99:
                 useFrac = 1.0
+            flask.session['useFrac'] = useFrac
             if useFrac < 1.0:
                 dat = df.sample(frac=useFrac)
                 dat.sort_index(inplace=True)
@@ -117,9 +126,9 @@ def register_callbacks(dashapp):
     @dashapp.callback(
         Output('aplot', 'figure'),
         [Input('reloadbutton', 'n_clicks_timestamp')],
-        [State('localstore', 'data'),State('frac','value'),State('chooser','value'),State('centerdata','value')])
-    def updateFigure(reloadtime,sessdat,frac,fpath,meancenter):
-        return figUpdate(sessdat['useFrac'],fpath,meancenter) 
+        [State('localstore', 'data'),State('frac','value'),State('chooser','value'),State('centerdata','value'),State('movmedian','value')])
+    def updateFigure(reloadtime,sessdat,frac,fpath,meancenter,movmedian):
+        return figUpdate(frac,fpath,meancenter,movmedian) 
         
     @dashapp.callback(
         Output('localstore', 'data'),
