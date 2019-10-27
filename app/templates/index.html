@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_anonymous %}
+  <h1>Hello, stranger!</h1>
+{% else  %}
+  <h1>{{ current_user.username }} is using flask for dash apps</h1>
+  <ul>
+      <li><a href="/rossdashboard">Ross Dashboard</a></li>
+      <li><a href="/loadcellplotter">Load Cell Data Viewer</a></li>
+  </ul>
+{% endif %}
+{% endblock %}
