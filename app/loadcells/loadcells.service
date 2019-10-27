@@ -1,0 +1,16 @@
+[Unit]
+Description=loadcell remote data logger
+After=multi-user.target
+
+[Service]
+Type=idle
+
+User=pi
+WorkingDirectory=/home/pi/loadcell
+ExecStart=/usr/bin/python3 /home/pi/loadcell/flaskloadcells.py
+
+Restart=always
+RestartSec=0
+
+[Install]
+WantedBy=multi-user.target
