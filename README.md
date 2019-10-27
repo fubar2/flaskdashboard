@@ -5,26 +5,32 @@ For details and how to use, please read: https://medium.com/@olegkomarov_77860/h
 
 *Project goal* 
 Evaluate biomass growth rate as a potential dependent variable for experiments with feeding frequency, strength, lighting and so on as a driver
-for improving hydroponic crop yields.
+for improving hydroponic crop yields, using inexpensive commodity hardware and the software in this repository.
 
 *What we are trying to measure?*
 
-The goal is to track a plant's weight gain over time.
+One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated.
 
-In order to estimate rate of change of the biomass over time, a time series of instantaneous weights is collected from a load cell on which the pot rests, typically
-every 30 seconds.
+In order to estimate the rate of change, a time series of instantaneous weight measurements is collected from a load cell positioned underneath the pot. Sampling every 
+30 seconds seems to give reasonable detail without being too unwieldy.
 
 Since they are in hydroponic ("hempy") pots, all nutrients are supplied in the watering solution, so no loss of mass as would be expected as soil became depleted of soluble 
-nutrients, is expected over the growing period. The total mass at any time includes *a fixed component* - the pot plus the water free medium and *some variable 
-components* - only one of which, the first, we are trying to measure:
+nutrients, is expected over the growing period. 
+
+Note that the total mass at any time includes *a fixed component* - the pot plus the water free medium and *some variable 
+components*:
 
 * the growing plant biomass
+
 * the mass of water held in the hydroponic medium 
+
 * the mass of water in any reservoir
 
-It seems reasonable to assume *that any real change in the total mass * is due to:
+We are trying to measure the first one, but will need to take account of the other variable sources of change.
 
-* real change in plant biomass or 
+It seems reasonable to assume *that any real change in the total mass* can only arise from:
+
+* real change in plant biomass and/or 
 
 * real change in the mass of water in the pot from an automated timed watering event, manual watering or from loss due to plant transpiration or other evaporation.
 
@@ -95,6 +101,13 @@ and extensive small-thing soldering skills, it's very easy to cook a chip or mak
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
 periodically and posts them to my fileserver using SFTP, where the Flask webapp code can read and plot them interactively. 
 
+* Dependencies for the raspberry pi code include the HX711 and Rpy.GPIO python modules. They are all taken care of by using the pip requirements files on the pi. 
+Please, use a virtual environment for the server but I only use the pi zero for this project so have adjusted the system python. Something like
+
+> pip3 install -r pirequirements.txt
+
+should work.
+
 2. SFTP accessible server for file storage
 
 * In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
@@ -104,13 +117,15 @@ In my case it's all on the local lan but...YMMV
 
 3. Data analysis and presentation
 
-* There's an interactive web "dash in flask" operation here (see head of this file). 
+* There's an interactive web "dash in flask" application in this repository based on a project described at the head of this file). 
 
 * One component is a simple plotter for our data. All data series at the config.py path will be available for plotting. 
 
-* A plot can be raw data but most of my series are at very different scales - bigger or smaller pots - so mean centering is a really good idea to make
-more than one plot comparable. Centering makes no difference to the shape of each series but makes multiple series much easier to compare because the Y axis 
-range is smaller compared to a non-centered multiple series plot, where a larger Y axis range results in a lot of fine detail being lost in each individual series.
+* Plot can use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
+plant phenotypes with bigger or smaller water use. In this case, mean centering is a really good idea to make more than one plot comparable. 
+Mean centering only changes the Y scale but otherwise makes no difference to the shape of each series. It certainly does 
+make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
+where a larger Y axis range results in a lot of fine detail being lost in each individual series.
 
 * These plots are interactive and that becomes silly slow with big data. A month will be about 3000*30=90000 data points. No point plotting them all when a random sample
 of say, 5000 points from each series will give excellent fidelity with reasonable interactivity. Repeating a plot may give a rather different appearance using down-sampled raw data.
@@ -118,7 +133,7 @@ Outliers vary in each sample, and the Y axis scale automatically adapts to accom
 The pattern remains the same but the scale jumps around with each unscaled sampling procedure. This makes me unhappy but there are methods to help decrease it.
 
 * A moving median can be plotted rather than the raw data to make the plots less jittery. This can also be mean centered and both these techniques are recommended for
-routing use when comparing multiple plant weight patterns. Makes it smoother for sure since there's a fair bit of noise in
-the raw readings as described above. More importantly, repeated sampling produces more or less indistinguishable plots with occasional small changes in the Y axis scale in
-contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
+routing use when comparing multiple plant weight patterns. This does change the shape of the series and makes it smoother for sure, removing a fair bit of noise in
+the raw readings as described above. More importantly, *repeated sampling of moving median data with the same parameters produces more or less indistinguishable plots* 
+with occasional small changes in the Y axis scale in contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
 
