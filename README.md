@@ -54,8 +54,8 @@ variation. That's arguably good enough for government work since the plants migh
 
 Summary:
 
-** Random variation is unavoidable and adds "noise" if it's unbiased which ours probably is. Systematic variation is more or less fixed and consistent 
-within each load cell/plant series and seem unlikely to make much difference to the estimate of growth based on the slope between successive watering time maximum weights.** 
+**Random variation is unavoidable and adds "noise". It's not so bad if it's unbiased which ours probably is so we essentially ignore it. Systematic variation is more or less fixed and consistent 
+within each load cell/plant series and seem unlikely to make much difference to the estimate of growth based on the slope between successive watering time maximum weights** 
 
 Components
 
@@ -64,7 +64,7 @@ Components
 * The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
 30 second intervals or so - set as SAMPINT in config.py. Much faster sampling would require a faster CPU. 
 
-*I used cheap chinese ebay gear - about $20 altogher and was expecting poor data but am pleasantly surprised. From my experiments, it's a good idea to 
+* I used cheap chinese ebay gear - about $20 altogher and was expecting poor data but am pleasantly surprised. From my experiments, it's a good idea to 
 power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
 abandon load cells. See the code...
 
