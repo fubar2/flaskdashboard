@@ -1,8 +1,3 @@
-Code derived from:
-*Dash on flask with flask_login
-An example of a seamless integration of a Dash app into an existing Flask app based on the application factory pattern.
-For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b*
-
 *Project goal* 
 
 Evaluate **biomass growth rate** as a dependent variable for experiments with environmental factors including nutrition and lighting to 
@@ -126,6 +121,11 @@ In my case it's all on the local lan but...YMMV
 * There's an interactive web "dash in flask" application in this repository based on a project described at the head of this file). 
 
 * One component is a simple plotter for our data. All data series at the config.py path will be available for plotting. 
+
+* The web server component of this project is based on the fine code found at *"Dash on flask with flask_login
+An example of a seamless integration of a Dash app into an existing Flask app based on the application factory pattern.
+For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b"*
+
 
 * Plot can use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
 plant phenotypes with bigger or smaller water use. In this case, mean centering is a really good idea to make more than one plot comparable. 
