@@ -4,20 +4,21 @@ An example of a seamless integration of a Dash app into an existing Flask app ba
 For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b*
 
 *Project goal* 
-Evaluate biomass growth rate as a potential dependent variable for experiments with feeding frequency, strength, lighting and so on as a driver
-for improving hydroponic crop yields, using inexpensive commodity hardware and the software in this repository.
+
+Evaluate **biomass growth rate** as a dependent variable for experiments with environmental factors including nutrition and lighting to 
+improve hydroponic crop yields and efficiency, using inexpensive commodity hardware and the software in this repository.
 
 *What we are trying to measure?*
 
 One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated.
 
-In order to estimate the rate of change, a time series of instantaneous weight measurements is collected from a load cell positioned underneath the pot. Sampling every 
-30 seconds seems to give reasonable detail without being too unwieldy.
+In order to estimate the rate of change, an uninterrupted time series of instantaneous weight measurements will be collected from a load cell 
+positioned underneath the pot. Sampling every 30 seconds seems to give reasonable detail without being too unwieldy.
 
-Since they are in hydroponic ("hempy") pots, all nutrients are supplied in the watering solution, so no loss of mass as would be expected as soil became depleted of soluble 
-nutrients, is expected over the growing period. 
+All plants are in hydroponic ("hempy") pots so all nutrients are supplied in the watering solution. This avoids dealing with the inevitable loss of mass
+expected as soil became depleted of soluble nutrients over the growing period. 
 
-Note that the total mass at any time includes *a fixed component* - the pot plus the water free medium and *some variable 
+Note that the total mass at any time includes *a fixed component* comprising the pot plus the water free medium, plus *some variable 
 components*:
 
 * the growing plant biomass
@@ -26,7 +27,9 @@ components*:
 
 * the mass of water in any reservoir
 
-We are trying to measure the first one, but will need to take account of the other variable sources of change.
+We are trying to measure only the first one, but will need to take account of all other variable sources of change.
+
+*Central assumption*
 
 It seems reasonable to assume *that any real change in the total mass* can only arise from:
 
@@ -34,44 +37,47 @@ It seems reasonable to assume *that any real change in the total mass* can only 
 
 * real change in the mass of water in the pot from an automated timed watering event, manual watering or from loss due to plant transpiration or other evaporation.
 
-
-*What measurement problems arise?*
-
 Measurement as always, is complicated by technical, systematic and random errors. 
 
-Random errors arise for example because:
+*What technical measurement issues can be expected*
 
-* It's very easy to bump the scales or plants when viewing them let alone handling the plants when 
-scouting for pests with a loupe, pruning or manually watering. No attempt was made to avoid these necessary interventions.
+Random error is inevitable in any physical measurement, including:
 
-* Pots have two pieces of plastic irrigation pipe attached. The bottom one is for drainage into containers and the other carries fluid from the automated nutrient pump attached
-to the nutrient reservoir. These pipes can ay interfere with measurement if/when they bump into fixed and moving objects. And they certainly do. 
+* Accidental physical contact of plants, PVC tubes or pots during maintenance. It's almost impossible to avoid bumping the scales or plants when viewing them and 
+handling them during maintenance such as when scouting for pests with a loupe, pruning or manually watering. No attempt will be made to avoid these necessary 
+interventions since this is a proof of concept. *If it works, it will work even better under more strictly controlled conditions.*
 
-* The hardware (load cell, A/D converter) introduce their own systematic and random errors, but we try to minimise these by
-leaving the HX711 powered down most of the time between samples and running on the 3.7v supply instead of 5V to minimise chip and circuit heat. 
+* Pots have two PVC irrigation pipes fixed to them. The bottom, larger (10mm) one is for drainage into containers and the other smaller (7mm) carries fluid 
+from the automated nutrient pump attached to the nutrient reservoir. These pipes can and do interfere with measurement if/when they bump into each other or into 
+other equipment in the growing space. 
 
-Random variation is inevitable from the test setup - could be much better in a laboratory.
+* The electronic hardware. The load cell and A/D converter chip introduce their own systematic and random errors, but from earlier experiments, these seem to be minimised by
+leaving the HX711 powered down most of the time between samples and using the 3.7v supply instead of the more usual 5V to minimise chip and circuit heat. 
 
-In addition to random error and real changes in plant biomass, there are important systematic sources of variation that must
+In addition to *random error and real changes in plant biomass*, there are important *systematic* sources of variation that must
 be dealt with in analysis:
 
-* *Automated watering*. The plants gain a lot of weight over a minute or so 4 times a day at present. The pot+plant will
-be at the maximum possible weight at the peak after watering if the watering has produced a decent run off - medium will be saturated. This seems a
-key assumption for estimating growth in each series *as a slope between the maximum values after each watering*.
+* Automated watering. Each pot receives a few hundred millilitres of nutrient solution over a minute or so, several (typically 4) times a day. The pot + plant will
+be at the maximum possible mass when it is freshly watered if the watering has produced substantial run off into the drainage system, because the medium will be saturated and the perlite
+reservoir of the hempy pot will be full. This suggests that one possible approach for estimating growth in each series *as the slope between successive maximum mass 
+values after regular watering*.
 
-* Leaves are picked irregularly - damaged leaves are always removed and regular defoliation is practised to shape and control the plants. 
-Maybe 10g of fresh biomass might be taken from one plant at one time. This was easy to see in the first test days as a loss of maximum.  Since this is
-inevitable, another key assumption is that if a series shows a discontinuity downward between two successive maxima, that represents a 
-scale change possibly after defoliation, so is considered to end the current group of increasing maxima used to estimate a growth slope. Between these
-discontinuities of loss of biomass, *Slope between successive increasing maxima* should give a useful estimate of biomass gain over time and the 
+* Defoliation. Leaves are picked and removed from the biomass. Senescent and damaged leaves are always removed. Routine defoliation is practised to shape and control the plants. 
+A moderate defoliation will remove about 10g of fresh biomass from one plant in one session. The effect was easy to see in the first test days as a decrease from one maximum to
+the next. Since this defoliation is a normal part of plant management, one way of avoiding bias will be to test each pair of maxima from each series for downward 
+discontinuities at some arbitrary (eg 10g) threshold. These signify that a scale change after defoliation has occurred. If we use these discontinuities to divide the 
+series maxima into groups of steadily increasing maxima, each used to estimate a growth slope. Between discontinuities of loss of biomass, 
+*Slope between successive increasing maxima* should give a useful estimate of biomass gain over time and the 
 discontinuities should not bias the estimates as long as they are accounted for in the analysis as a way to partition periods between episodes of biomass removal
-for slope estimation.
+for slope estimation. Defoliation usually occurs no more than once every few days so there should be at least 4 peaks (24 hours of watering every 6 hours) in each
+estimate of growth rate. Many will be much longer between defoliation episodes.
 
-* Cheap loadcells are temperature sensitive and have a bad press for instability. We need weeks of data and cannot regularly re-tare the scales. In order to establish how 
-bad the systemic and random variation is, I'm keeping one with a fixed load. So far, the range appears to be within about 8g in 4000 over a week, so 0.2% - and that was a 
-week of wide temperature variation. That's arguably good enough for government work since the plants might transpire 10-50g/hour.
+* Cheap kit. Cheap loadcells are notoriously temperature sensitive and have a bad press for instability. Months of continuous data are needed so regular re-tare of the scales is
+impracticable. In order to get a clear understanding of how bad these systemic and random sources of variation are, one scale has a 4kg mass instead of a plant pot and the range 
+of variability appears to be within 6-8g in 4000g over a week of observation, giving no more than 0.2% "error". That's arguably good enough for government work since the plants 
+under test are currently transpiring 10-50g/hour each during lights-on.
 
-Summary:
+Summary of measurement technical issues:
 
 **Random variation is unavoidable and adds "noise". It's not so bad if it's unbiased which ours probably is so we essentially ignore it. Systematic variation is more or less fixed and consistent 
 within each load cell/plant series and seem unlikely to make much difference to the estimate of growth based on the slope between successive watering time maximum weights** 
@@ -84,13 +90,13 @@ It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine
 * The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
 30 second intervals or so - set as SAMPINT in config.py. Much faster sampling would require a faster CPU. 
 
-* I used cheap chinese ebay gear - about $20 altogher and was expecting poor data but am pleasantly surprised. From my experiments, it's a good idea to 
+* I used cheap chinese ebay gear - about $20 delivered for 4 kits, so poor data was expected. So far, I have been pleasantly surprised. From my experiments, it's a good idea to 
 power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
 abandon load cells. See the code...
 
-* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. One set #4 and one set #5. 
-Standoffs (make sure each bolt goes through 2 washers that are compressed between the load cell and the plate) 
-are essential so the load cell does not ever touch a plate directly, even under load.
+* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. One pair for #4 and one for #5,
+probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
+(make sure each bolt goes through 2 washers that are compressed between the load cell and the plate.
 
 * Wiring the load cells to the HX711 chips involves correctly soldering some rather small things and making good decisions about which wire goes where.
 Labels and Google for documentation (since none comes with the cheap chinese kit) are essential for sanity. 
@@ -101,7 +107,7 @@ and extensive small-thing soldering skills, it's very easy to cook a chip or mak
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
 periodically and posts them to my fileserver using SFTP, where the Flask webapp code can read and plot them interactively. 
 
-* Dependencies for the raspberry pi code include the HX711 and Rpy.GPIO python modules. They are all taken care of by using the pip requirements files on the pi. 
+* Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. They are all taken care of by using the pip requirements files on the pi. 
 Please, use a virtual environment for the server but I only use the pi zero for this project so have adjusted the system python. Something like
 
 > pip3 install -r pirequirements.txt
