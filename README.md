@@ -140,10 +140,18 @@ Mean centering only changes the Y scale but otherwise makes no difference to the
 make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
 where a larger Y axis range results in a lot of fine detail being lost in each individual series.
 
+Below is raw data from 3 plants. Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.
+
+![Raw data](rawgrow5days.png) 
+
 * These plots are interactive and that becomes silly slow with big data. A month will be about 3000*30=90000 data points. No point plotting them all when a random sample
 of say, 5000 points from each series will give excellent fidelity with reasonable interactivity. Repeating a plot may give a rather different appearance using down-sampled raw data.
 Outliers vary in each sample, and the Y axis scale automatically adapts to accomodate the most extreme high and low outliers. Outliers are sampled randomly like everything else. 
 The pattern remains the same but the scale jumps around with each unscaled sampling procedure. This makes me unhappy but there are methods to help decrease it.
+
+Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability.
+
+![Mean centered data](meancent5days.png)
 
 * A moving median can be plotted rather than the raw data to make the plots less jittery. This can also be mean centered and both these techniques are recommended for
 routing use when comparing multiple plant weight patterns. This does change the shape of the series and makes it smoother for sure, removing a fair bit of noise in
@@ -151,7 +159,7 @@ the raw readings as described above. More importantly, *repeated sampling of mov
 with occasional small changes in the Y axis scale in contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
 
 
-Some examples.
 
-![Raw data from 3 plants. Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.](rawgrow5days.png) 
-![Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability.](meancent5days.png)
+
+
+
