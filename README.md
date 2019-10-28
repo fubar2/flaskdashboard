@@ -3,7 +3,36 @@
 Evaluate **biomass growth rate** as a dependent variable for experiments with environmental factors including nutrition and lighting to 
 improve hydroponic crop yields and efficiency, using inexpensive commodity hardware and the software in this repository.
 
-*What we are trying to measure?*
+*Proof of concept or never mind the quality, feel the width.*
+
+Before explaining anything, below is the first raw data I've collected from 3 plants. It is truly shitfull data with periods missing and 
+some disturbances to the watering typical of real experiments. At least it shows what is possible. 
+
+The Y axis is recorded weight and the X axis is time. 
+
+The plots cover about 5 days of software development :) and show data from 3 different plants in early
+flower. 
+
+All weights rise rapidly whenever the automated watering runs 6, then 4 times a day. All plots suddenly go up and reach a peak. 
+
+Between waterings, the weights generally decline. Some faster than others, as the plant uses water to gather nutrients by transpiration. 
+There's almost no evaporation as everything is covered against fungus gnats.
+
+During periods of darkness, the rate of fall is much lower - that's to be expected since transpiration is decreased I believe.
+
+
+![Raw data](rawgrow5days.png) 
+
+Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability. This just changes scales so
+the plant variations all line up around zero for each series so it serves to magnify each series compared to the raw plot.
+
+![Mean centered data](meancent5days.png)
+
+Aside from the missing data and random watering/nudging, it's clear that plants generally lose weight faster when lights are on than at night. That's cool to see because
+it's biology we expect to see. Plants vary - these are all different phenotypes - so some appear to be doing far more transpiration than others. I have time lapse video that 
+reflects the extremely fast growth of that same plant compared to the others so again, this is cool.
+
+*What is being measured, how and why*
 
 One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated.
 
@@ -140,18 +169,10 @@ Mean centering only changes the Y scale but otherwise makes no difference to the
 make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
 where a larger Y axis range results in a lot of fine detail being lost in each individual series.
 
-Below is raw data from 3 plants. Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.
-
-![Raw data](rawgrow5days.png) 
-
 * These plots are interactive and that becomes silly slow with big data. A month will be about 3000*30=90000 data points. No point plotting them all when a random sample
 of say, 5000 points from each series will give excellent fidelity with reasonable interactivity. Repeating a plot may give a rather different appearance using down-sampled raw data.
 Outliers vary in each sample, and the Y axis scale automatically adapts to accomodate the most extreme high and low outliers. Outliers are sampled randomly like everything else. 
 The pattern remains the same but the scale jumps around with each unscaled sampling procedure. This makes me unhappy but there are methods to help decrease it.
-
-Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability.
-
-![Mean centered data](meancent5days.png)
 
 * A moving median can be plotted rather than the raw data to make the plots less jittery. This can also be mean centered and both these techniques are recommended for
 routing use when comparing multiple plant weight patterns. This does change the shape of the series and makes it smoother for sure, removing a fair bit of noise in
