@@ -153,11 +153,5 @@ with occasional small changes in the Y axis scale in contrast to the more variab
 
 Some examples.
 
-
-mpboom
-mpboom
-Commander Lvl 3
-‎01-30-2018 07:48 AM
-Message 4 of 15
-
-![Raw data from 3 plants.](rawgrow5days.png) Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.
+![Raw data from 3 plants. Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.](rawgrow5days.png) 
+![Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability.](meancent5days.png)
