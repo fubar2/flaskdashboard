@@ -57,8 +57,9 @@ be at the maximum possible mass when it is freshly watered if the watering has p
 reservoir of the hempy pot will be full. This suggests that one possible approach for estimating growth in each series *as the slope between successive maximum mass 
 values after regular watering*.
 
-* Defoliation. Leaves are picked and removed from the biomass. Senescent and damaged leaves are always removed. Routine defoliation is practised to shape and control the plants. 
-A moderate defoliation will remove about 10g of fresh biomass from one plant in one session. The effect was easy to see in the first test days as a decrease from one maximum to
+* Defoliation. Plants are regularly defoliated so leaves are removed from the plant biomass periodically. Senescent and damaged leaves are always removed. 
+Routine defoliation is practised to shape and control the plants growth to suit the limited space available. A moderate defoliation will remove about 10g of fresh biomass 
+from one plant in one session. The effect was easy to see in the first test days as a decrease from one maximum to
 the next. Since this defoliation is a normal part of plant management, one way of avoiding bias will be to test each pair of maxima from each series for downward 
 discontinuities at some arbitrary (eg 10g) threshold. These signify that a scale change after defoliation has occurred. If we use these discontinuities to divide the 
 series maxima into groups of steadily increasing maxima, each used to estimate a growth slope. Between discontinuities of loss of biomass, 
@@ -69,7 +70,7 @@ estimate of growth rate. Many will be much longer between defoliation episodes.
 
 * Cheap kit. Cheap loadcells are notoriously temperature sensitive and have a bad press for instability. Months of continuous data are needed so regular re-tare of the scales is
 impracticable. In order to get a clear understanding of how bad these systemic and random sources of variation are, one scale has a 4kg mass instead of a plant pot and the range 
-of variability appears to be within 6-8g in 4000g over a week of observation, giving no more than 0.2% "error". That's arguably good enough for government work since the plants 
+of variability appears to be within 4g over 6 days of observation, so ~0.1% "error". That's arguably good enough for government work since the plants 
 under test are currently transpiring 10-50g/hour each during lights-on.
 
 Summary of measurement technical issues:
@@ -85,9 +86,9 @@ It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine
 * The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
 30 second intervals or so - set as SAMPINT in config.py. Much faster sampling would require a faster CPU. 
 
-* I used cheap chinese ebay gear - about $20 delivered for 4 kits, so poor data was expected. So far, I have been pleasantly surprised. From my experiments, it's a good idea to 
+* Cheap chinese ebay gear - about $20 delivered for 4 loadcell/HX711 kits, so poor data was expected. So far, I have been pleasantly surprised. From my experiments, it's a good idea to 
 power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
-abandon load cells. See the code...
+abandon load cells. 
 
 * The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. One pair for #4 and one for #5,
 probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
@@ -98,21 +99,24 @@ Labels and Google for documentation (since none comes with the cheap chinese kit
 This is definitely not an ideal choice as a first project since without excellent vision, steady hands, a reliable tiny soldering iron
 and extensive small-thing soldering skills, it's very easy to cook a chip or make messy short circuits. Should be good by about the third one I reckon so buy some spares.
 
-* The raspberry pi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
+* The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
 periodically and posts them to my fileserver using SFTP, where the Flask webapp code can read and plot them interactively. 
 
-* Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. They are all taken care of by using the pip requirements files on the pi. 
-Please, use a virtual environment for the server but I only use the pi zero for this project so have adjusted the system python. Something like
+* Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. Please, use a virtual environment for the server but if
+you only use the pi zero for this project, installing to the system python environment seems reasonable. 
+Something like:
 
-> pip3 install -r pirequirements.txt
+> sudo pip3 install hx711
+> sudo pip3 install RPi.GPIO
+> sudo pip3 install paramiko
 
 should work.
 
 2. SFTP accessible server for file storage
 
 * In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
-In my case it's all on the local lan but...YMMV 
+In my case it's all on my firewalled LAN but...YMMV 
  
 * config.py contains all the login and path details. Suggest you supply a public key file path rather than a password especially if you are going full interweb.
 
@@ -126,8 +130,11 @@ In my case it's all on the local lan but...YMMV
 An example of a seamless integration of a Dash app into an existing Flask app based on the application factory pattern.
 For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b"*
 
+* requirements.txt contains a long list of dependencies. In the python virtual environment you use for this project,
+> pip3 install -f requirements.txt 
+should do the needful.
 
-* Plot can use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
+* Plots can be configured to use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
 plant phenotypes with bigger or smaller water use. In this case, mean centering is a really good idea to make more than one plot comparable. 
 Mean centering only changes the Y scale but otherwise makes no difference to the shape of each series. It certainly does 
 make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
@@ -143,3 +150,14 @@ routing use when comparing multiple plant weight patterns. This does change the 
 the raw readings as described above. More importantly, *repeated sampling of moving median data with the same parameters produces more or less indistinguishable plots* 
 with occasional small changes in the Y axis scale in contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
 
+
+Some examples.
+
+
+mpboom
+mpboom
+Commander Lvl 3
+‎01-30-2018 07:48 AM
+Message 4 of 15
+
+![Raw data from 3 plants.](rawgrow5days.png) Shitfull data with periods missing and some disturbances to the watering typical of real experiments. At least it shows what is possible.

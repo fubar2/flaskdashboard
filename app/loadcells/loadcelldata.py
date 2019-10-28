@@ -66,7 +66,7 @@ class SftpClient:
     def file_exists(self, remote_path):
 
         try:
-            print('remote path : ', remote_path)
+            # print('remote path : ', remote_path)
             self._connection.stat(remote_path)
         except IOError as e:
             if e.errno == errno.ENOENT:
@@ -159,10 +159,10 @@ class loadCellData():
 class loadCellDataMulti():
 
     def __init__(self,nsd,fpath):
-        print('fpath=%s' % fpath)
+        # print('fpath=%s' % fpath)
         self.started = time.time()
         tzl = get_localzone().zone
-        print('####tzl=',tzl)
+        # print('####tzl=',tzl)
         self.tzl = tzl
         self.nsd = nsd
         self.have_cache = False
