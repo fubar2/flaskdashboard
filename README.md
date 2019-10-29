@@ -13,18 +13,16 @@ The Y axis is recorded weight and the X axis is time.
 The plots cover about 5 days of software development :) and show data from 3 different plants in early
 flower. 
 
-All weights rise rapidly whenever the automated watering runs 6, then 4 times a day. All plots suddenly go up and reach a peak. 
-
-Between waterings, the weights generally decline. Some faster than others, as the plant uses water to gather nutrients by transpiration. 
-There's almost no evaporation as everything is covered against fungus gnats.
-
-During periods of darkness, the rate of fall is much lower - that's to be expected since transpiration is decreased I believe.
+There are regular automated watering events lasting about a minute when all 3 plant weights rise rapidly 6, then 4 times a day. All plots suddenly go up and reach a peak, then
+between waterings, the weights all decline at a steady rate, some faster than others as the plants transpirate. There's almost no evaporation as everything is covered against fungus gnats.
+During periods of darkness, the watering events continue, but after each rise, the rate of fall is much lower in all 3 pots. That's to be expected since transpiration is decreased I believe.
 
 
 ![Raw data](rawgrow5days.png) 
 
-Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability. This just changes scales so
-the plant variations all line up around zero for each series so it serves to magnify each series compared to the raw plot.
+Mean centered data from 3 plants has a more compact Y axis so shows much more of the measurement variability for all the series. Mean centering subtracts the series mean from
+every series value and changes only the scale, not the pattern, allowing individual plant recordings to line up around zero. The plots show much more detail for each individual
+plant compared to the raw plot.
 
 ![Mean centered data](meancent5days.png)
 
@@ -69,10 +67,10 @@ Random error is inevitable in any physical measurement, including:
 
 * Accidental physical contact of plants, PVC tubes or pots during maintenance. It's almost impossible to avoid bumping the scales or plants when viewing them and 
 handling them during maintenance such as when scouting for pests with a loupe, pruning or manually watering. No attempt will be made to avoid these necessary 
-interventions since this is a proof of concept. *If it works, it will work even better under more strictly controlled conditions.*
+interventions since this is a proof of concept. *If it works, it will work even better under more strictly controlled conditions*
 
-* Pots have two PVC irrigation pipes fixed to them. The bottom, larger (10mm) one is for drainage into containers and the other smaller (7mm) carries fluid 
-from the automated nutrient pump attached to the nutrient reservoir. These pipes can and do interfere with measurement if/when they bump into each other or into 
+* Pots have two PVC irrigation pipes fixed to them. The bottom, larger (10mm) one is for drainage into containers and the other smaller (4mm) carries fluid 
+from the automated pump attached to the nutrient reservoir. These pipes can and do interfere with measurement if/when they bump into each other or into 
 other equipment in the growing space. 
 
 * The electronic hardware. The load cell and A/D converter chip introduce their own systematic and random errors, but from earlier experiments, these seem to be minimised by
@@ -119,21 +117,25 @@ It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine
 power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
 abandon load cells. 
 
-* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. One pair for #4 and one for #5,
-probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
-(make sure each bolt goes through 2 washers that are compressed between the load cell and the plate.
+* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. Mine had one pair threaded for #4 and one for #5
+bolts, probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
+If each bolt goes through 2 washers compressed between the load cell and the plate, they should be fine. 25mm bolts worked for me.
 
 * Wiring the load cells to the HX711 chips involves correctly soldering some rather small things and making good decisions about which wire goes where.
 Labels and Google for documentation (since none comes with the cheap chinese kit) are essential for sanity. 
 This is definitely not an ideal choice as a first project since without excellent vision, steady hands, a reliable tiny soldering iron
-and extensive small-thing soldering skills, it's very easy to cook a chip or make messy short circuits. Should be good by about the third one I reckon so buy some spares.
+and extensive small-thing soldering skills, it's very easy to cook a chip or short circuit header pins together. There is a sinking feeling
+when you power something up and it doesn't work. If this is your first project and you are a fast learner, you should definitely be good by 
+about the third one I reckon so buy some spares.
 
 * The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
-periodically and posts them to my fileserver using SFTP, where the Flask webapp code can read and plot them interactively. 
+periodically and posts them to a remote fileserver using SFTP and a public key file. There is a Flask webapp that can read and plot them interactively given the
+same login credentials in configuration. 
 
 * Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. Please, use a virtual environment for the server but if
 you only use the pi zero for this project, installing to the system python environment seems reasonable. 
+
 Something like:
 
 > sudo pip3 install hx711
