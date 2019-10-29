@@ -107,79 +107,79 @@ within each load cell/plant series and seem unlikely to make much difference to 
 
 5. *Components in this project*
 
-   1. The protype hardware comprises a Raspberry pi zero w attached to 4 hx711 A/D chips each wired to a 10kg load cell - cheap no-name, documentation free chinese kit from ebay.
-It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine.
+    1. The protype hardware comprises a Raspberry pi zero w attached to 4 hx711 A/D chips each wired to a 10kg load cell - cheap no-name, documentation free chinese kit from ebay.
+	It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine.
 
-* The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
-30 second intervals or so - set as SAMPINT in config.py. Much faster sampling would require a faster CPU. 
+		* The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
+		30 second intervals or so - set as SAMPINT in config.py. Much faster sampling would require a faster CPU. 
 
-* Cheap chinese ebay gear - about $20 delivered for 4 loadcell/HX711 kits, so poor data was expected. So far, I have been pleasantly surprised. From my experiments, it's a good idea to 
-power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
-abandon load cells. 
+		* Cheap chinese ebay gear - about $20 delivered for 4 loadcell/HX711 kits, so poor data was expected. So far, I have been pleasantly surprised. From my experiments, it's a good idea to 
+		power down the HX711 between readings and with my chips, use 3.7v rather than the 5v supply because heat may lead to horrible drift as has lead previous projects like the beekeeper one to
+		abandon load cells. 
 
-* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. Mine had one pair threaded for #4 and one for #5
-bolts, probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
-If each bolt goes through 2 washers compressed between the load cell and the plate, they should be fine. 25mm bolts worked for me.
+		* The load cells must be mounted on rigid plates to be useful. I hacked some pine fencing. The aluminium load cells have threaded holes for bolts. Mine had one pair threaded for #4 and one for #5
+		bolts, probably to help ensure that the load cells are mounted the right way up in application. Standoffs are essential so the load cell does not ever touch a plate directly, even under load.
+		If each bolt goes through 2 washers compressed between the load cell and the plate, they should be fine. 25mm bolts worked for me.
 
-* Wiring the load cells to the HX711 chips involves correctly soldering some rather small things and making good decisions about which wire goes where.
-Labels and Google for documentation (since none comes with the cheap chinese kit) are essential for sanity. 
-This is definitely not an ideal choice as a first project since without excellent vision, steady hands, a reliable tiny soldering iron
-and extensive small-thing soldering skills, it's very easy to cook a chip or short circuit header pins together. There is a sinking feeling
-when you power something up and it doesn't work. If this is your first project and you are a fast learner, you should definitely be good by 
-about the third one I reckon so buy some spares.
+		* Wiring the load cells to the HX711 chips involves correctly soldering some rather small things and making good decisions about which wire goes where.
+		Labels and Google for documentation (since none comes with the cheap chinese kit) are essential for sanity. 
+		This is definitely not an ideal choice as a first project since without excellent vision, steady hands, a reliable tiny soldering iron
+		and extensive small-thing soldering skills, it's very easy to cook a chip or short circuit header pins together. There is a sinking feeling
+		when you power something up and it doesn't work. If this is your first project and you are a fast learner, you should definitely be good by 
+		about the third one I reckon so buy some spares.
 
-   2. The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
-reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
-periodically and posts them to a remote fileserver using SFTP and a public key file. There is a Flask webapp that can read and plot them interactively given the
-same login credentials in configuration. 
+    2. The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
+	reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
+	periodically and posts them to a remote fileserver using SFTP and a public key file. There is a Flask webapp that can read and plot them interactively given the
+	same login credentials in configuration. 
 
-* Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. Please, use a virtual environment for the server but if
-you only use the pi zero for this project, installing to the system python environment seems reasonable. 
+		* Dependencies for the raspberry pi code include the paramiko, HX711 and Rpy.GPIO python modules. Please, use a virtual environment for the server but if
+		you only use the pi zero for this project, installing to the system python environment seems reasonable. 
 
-Something like:
+		Something like:
 
-> sudo pip3 install hx711
-> sudo pip3 install RPi.GPIO
-> sudo pip3 install paramiko
+		> sudo pip3 install hx711
+		> sudo pip3 install RPi.GPIO
+		> sudo pip3 install paramiko
 
-should work.
+		should work.
 
-   3. SFTP accessible server for file storage
+    3. SFTP accessible server for file storage
 
-* In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
-In my case it's all on my firewalled LAN but...YMMV 
- 
-* config.py contains all the login and path details. Suggest you supply a public key file path rather than a password especially if you are going full interweb.
+		* In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
+		In my case it's all on my firewalled LAN but...YMMV 
+		 
+		* config.py contains all the login and path details. Suggest you supply a public key file path rather than a password especially if you are going full interweb.
 
-4. Data analysis and presentation
+    4. Data analysis and presentation
 
-* There's an interactive web "dash in flask" application in this repository based on a project described at the head of this file). 
+		* There's an interactive web "dash in flask" application in this repository based on a project described at the head of this file). 
 
-* One component is a simple plotter for our data. All data series at the config.py path will be available for plotting. 
+		* One component is a simple plotter for our data. All data series at the config.py path will be available for plotting. 
 
-* The web server component of this project is based on the fine code found at *"Dash on flask with flask_login
-An example of a seamless integration of a Dash app into an existing Flask app based on the application factory pattern.
-For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b"*
+		* The web server component of this project is based on the fine code found at *"Dash on flask with flask_login
+		An example of a seamless integration of a Dash app into an existing Flask app based on the application factory pattern.
+		For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b"*
 
-* requirements.txt contains a long list of dependencies. In the python virtual environment you use for this project,
-> pip3 install -f requirements.txt 
-should do the needful.
+		* requirements.txt contains a long list of dependencies. In the python virtual environment you use for this project,
+		> pip3 install -f requirements.txt 
+		should do the needful.
 
-* Plots can be configured to use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
-plant phenotypes with bigger or smaller water use. In this case, mean centering is a really good idea to make more than one plot comparable. 
-Mean centering only changes the Y scale but otherwise makes no difference to the shape of each series. It certainly does 
-make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
-where a larger Y axis range results in a lot of fine detail being lost in each individual series.
+		* Plots can be configured to use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
+		plant phenotypes with bigger or smaller water use. In this case, mean centering is a really good idea to make more than one plot comparable. 
+		Mean centering only changes the Y scale but otherwise makes no difference to the shape of each series. It certainly does 
+		make multiple series with variable dynamic ranges much easier to compare because the Y axis range is smaller compared to a non-centered multiple series plot, 
+		where a larger Y axis range results in a lot of fine detail being lost in each individual series.
 
-* These plots are interactive and that becomes silly slow with big data. A month will be about 3000*30=90000 data points. No point plotting them all when a random sample
-of say, 5000 points from each series will give excellent fidelity with reasonable interactivity. Repeating a plot may give a rather different appearance using down-sampled raw data.
-Outliers vary in each sample, and the Y axis scale automatically adapts to accomodate the most extreme high and low outliers. Outliers are sampled randomly like everything else. 
-The pattern remains the same but the scale jumps around with each unscaled sampling procedure. This makes me unhappy but there are methods to help decrease it.
+		* These plots are interactive and that becomes silly slow with big data. A month will be about 3000*30=90000 data points. No point plotting them all when a random sample
+		of say, 5000 points from each series will give excellent fidelity with reasonable interactivity. Repeating a plot may give a rather different appearance using down-sampled raw data.
+		Outliers vary in each sample, and the Y axis scale automatically adapts to accomodate the most extreme high and low outliers. Outliers are sampled randomly like everything else. 
+		The pattern remains the same but the scale jumps around with each unscaled sampling procedure. This makes me unhappy but there are methods to help decrease it.
 
-* A moving median can be plotted rather than the raw data to make the plots less jittery. This can also be mean centered and both these techniques are recommended for
-routing use when comparing multiple plant weight patterns. This does change the shape of the series and makes it smoother for sure, removing a fair bit of noise in
-the raw readings as described above. More importantly, *repeated sampling of moving median data with the same parameters produces more or less indistinguishable plots* 
-with occasional small changes in the Y axis scale in contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
+		* A moving median can be plotted rather than the raw data to make the plots less jittery. This can also be mean centered and both these techniques are recommended for
+		routing use when comparing multiple plant weight patterns. This does change the shape of the series and makes it smoother for sure, removing a fair bit of noise in
+		the raw readings as described above. More importantly, *repeated sampling of moving median data with the same parameters produces more or less indistinguishable plots* 
+		with occasional small changes in the Y axis scale in contrast to the more variable sampled raw data multiple series plots. This stability makes them more appealing to me.
 
 
 
