@@ -107,7 +107,7 @@ within each load cell/plant series and seem unlikely to make much difference to 
 
 5. *Components in this project*
 
-1. The protype hardware comprises a Raspberry pi zero w attached to 4 hx711 A/D chips each wired to a 10kg load cell - cheap no-name, documentation free chinese kit from ebay.
+   1. The protype hardware comprises a Raspberry pi zero w attached to 4 hx711 A/D chips each wired to a 10kg load cell - cheap no-name, documentation free chinese kit from ebay.
 It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine.
 
 * The loadcells have HX711 A/D converter chips and each one uses 2 GPIO ports for clock and data. The zero can easily run 4 of them sampling at
@@ -128,7 +128,7 @@ and extensive small-thing soldering skills, it's very easy to cook a chip or sho
 when you power something up and it doesn't work. If this is your first project and you are a fast learner, you should definitely be good by 
 about the third one I reckon so buy some spares.
 
-2. The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
+   2. The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
 periodically and posts them to a remote fileserver using SFTP and a public key file. There is a Flask webapp that can read and plot them interactively given the
 same login credentials in configuration. 
@@ -144,7 +144,7 @@ Something like:
 
 should work.
 
-3. SFTP accessible server for file storage
+   3. SFTP accessible server for file storage
 
 * In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
 In my case it's all on my firewalled LAN but...YMMV 
