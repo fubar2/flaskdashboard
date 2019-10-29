@@ -1,9 +1,9 @@
-*Project goal* 
+1. *Project goal* 
 
 Evaluate **biomass growth rate** as a dependent variable for experiments with environmental factors including nutrition and lighting to 
 improve hydroponic crop yields and efficiency, using inexpensive commodity hardware and the software in this repository.
 
-*Proof of concept or never mind the quality, feel the width.*
+2. *Proof of concept or never mind the quality, feel the width.*
 
 Before explaining anything, below is the first raw data I've collected from 3 plants. It is truly shitfull data with periods missing and 
 some disturbances to the watering typical of real experiments. At least it shows what is possible. 
@@ -14,7 +14,7 @@ The plots cover about 5 days of software development :) and show data from 3 dif
 flower. 
 
 There are regular automated watering events lasting about a minute when all 3 plant weights rise rapidly 6, then 4 times a day. All plots suddenly go up and reach a peak, then
-between waterings, the weights all decline at a steady rate, some faster than others as the plants transpirate. There's almost no evaporation as everything is covered against fungus gnats.
+between waterings, the weights all decline at a steady rate, some faster than others as the plants transpire. There's almost no evaporation as everything is covered against fungus gnats.
 During periods of darkness, the watering events continue, but after each rise, the rate of fall is much lower in all 3 pots. That's to be expected since transpiration is decreased I believe.
 
 
@@ -26,18 +26,19 @@ plant compared to the raw plot.
 
 ![Mean centered data](meancent5days.png)
 
-Aside from the missing data and random watering/nudging, it's clear that plants generally lose weight faster when lights are on than at night. That's cool to see because
-it's biology we expect to see. Plants vary - these are all different phenotypes - so some appear to be doing far more transpiration than others. I have time lapse video that 
-reflects the extremely fast growth of that same plant compared to the others so again, this is cool.
-
+Aside from the missing data and random watering/nudging, it's clear that each pot loses weight from transpiration faster when lights are on during the day than at night. 
+That's cool to see because it's biology we expect to see. Also, it's obvious that individual plants vary. These are all different phenotypes and some appear to be doing 
+far more transpiration than others. I have time lapse video that reflects the extremely fast growth of that same plant compared to the others so again, this is probably real.
 *What is being measured, how and why*
 
-One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated.
+3. *Understanding sources of variability in pot weights*
+
+One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated, but in the real world, measurements as always, 
+include real changes plus technical, systematic and random error. 
 
 In order to estimate the rate of change, an uninterrupted time series of instantaneous weight measurements will be collected from a load cell 
-positioned underneath the pot. Sampling every 30 seconds seems to give reasonable detail without being too unwieldy.
-
-All plants are in hydroponic ("hempy") pots so all nutrients are supplied in the watering solution. This avoids dealing with the inevitable loss of mass
+positioned underneath the pot. Sampling every 30 seconds seems to give reasonable detail without being too unwieldy. All plants are in hydroponic ("hempy") pots so 
+all nutrients are supplied in the watering solution. This avoids dealing with the inevitable loss of mass
 expected as soil became depleted of soluble nutrients over the growing period. 
 
 Note that the total mass at any time includes *a fixed component* comprising the pot plus the water free medium, plus *some variable 
@@ -59,9 +60,8 @@ It seems reasonable to assume *that any real change in the total mass* can only 
 
 * real change in the mass of water in the pot from an automated timed watering event, manual watering or from loss due to plant transpiration or other evaporation.
 
-Measurement as always, is complicated by technical, systematic and random errors. 
 
-*What technical measurement issues can be expected*
+4. *Technical measurement issues*
 
 Random error is inevitable in any physical measurement, including:
 
@@ -105,7 +105,7 @@ Summary of measurement technical issues:
 **Random variation is unavoidable and adds "noise". It's not so bad if it's unbiased which ours probably is so we essentially ignore it. Systematic variation is more or less fixed and consistent 
 within each load cell/plant series and seem unlikely to make much difference to the estimate of growth based on the slope between successive watering time maximum weights** 
 
-*Components*
+5. *Components in this project*
 
 1. The protype hardware comprises a Raspberry pi zero w attached to 4 hx711 A/D chips each wired to a 10kg load cell - cheap no-name, documentation free chinese kit from ebay.
 It's a fugly mess of (labelled!) wires and plugs but it's mine and it works fine.
@@ -128,7 +128,7 @@ and extensive small-thing soldering skills, it's very easy to cook a chip or sho
 when you power something up and it doesn't work. If this is your first project and you are a fast learner, you should definitely be good by 
 about the third one I reckon so buy some spares.
 
-* The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
+2. The rpi runs some python code as a service after an initial interactive run when each scale is tared and calibrated with a known weight. Calibrations are
 reused each time the raspberry pi starts the service until the next calibration is performed interactively. The code takes weight readings from multiple load cells 
 periodically and posts them to a remote fileserver using SFTP and a public key file. There is a Flask webapp that can read and plot them interactively given the
 same login credentials in configuration. 
@@ -144,14 +144,14 @@ Something like:
 
 should work.
 
-2. SFTP accessible server for file storage
+3. SFTP accessible server for file storage
 
 * In order to avoid regular aggravation from hard failed SD cards, it's best not to be writing regularly to local storage, so data are all exported to a file server via sftp. 
 In my case it's all on my firewalled LAN but...YMMV 
  
 * config.py contains all the login and path details. Suggest you supply a public key file path rather than a password especially if you are going full interweb.
 
-3. Data analysis and presentation
+4. Data analysis and presentation
 
 * There's an interactive web "dash in flask" application in this repository based on a project described at the head of this file). 
 
