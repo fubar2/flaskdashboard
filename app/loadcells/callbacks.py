@@ -29,7 +29,7 @@ from tzlocal import get_localzone
 
 from .loadcelldata import loadCellDataMulti
 
-NSD=2
+NSD=3
 def register_callbacks(dashapp):
 
 	def figUpdate(useFrac,filePath, meanCenter, movMedian):
@@ -46,11 +46,12 @@ def register_callbacks(dashapp):
 			nr = df.shape[0]
 			if nr == 0:
 				return {}
-			if nr > 5000:
-				useFrac = 5000.0/nr
-				dat = df.sample(frac=useFrac)
-			else:
-				dat = df
+			# if nr > 5000:
+				# useFrac = 5000.0/nr
+				# dat = df.sample(frac=useFrac)
+			# else:
+				# dat = df
+			dat = df
 			dat.sort_index(inplace=True)
 			useFrac = float(useFrac)
 			if useFrac == 0.0:

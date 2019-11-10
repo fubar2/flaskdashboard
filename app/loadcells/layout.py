@@ -3,6 +3,7 @@ import dash_html_components as html
 from config import BaseConfig
 from .loadcelldata import SftpClient
 from paramiko import Transport, SFTPClient, RSAKey
+import os
 
 filePath = ''
 useFrac = 1.0
@@ -21,10 +22,11 @@ def fileChooser(returnv = False):
     sftp.dirch(upload_remote_path)
     fl = sftp.dirlist(upload_remote_path)
     fl.sort()
+    fl = [x for x in fl if (x.split('.')[-1]=='xls')]
     ddl = []
     vals = []
     for fn in fl:
-        ddl.append({'label':fn.split('/')[-1],'value': fn})
+        ddl.append({'label':os.path.split(fn)[-1],'value': fn})
         vals.append(fn)
     if returnv:
         return vals

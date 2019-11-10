@@ -1,5 +1,5 @@
 
-class BaseConfig(self):
+class BaseConfig():
 	
 	SHORTSLEEP = 0.01
 	SAMPINT = 30
@@ -13,4 +13,3 @@ class BaseConfig(self):
 	SFTPPORT = 22
 	SFTPPASSWORD = ''
 	SFTPKEYFILENAME = '/home/%s/.ssh/id_rsa' % USER
-

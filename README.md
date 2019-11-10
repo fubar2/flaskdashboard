@@ -3,7 +3,7 @@
 Evaluate **biomass growth rate** as a dependent variable for experiments with environmental factors including nutrition and lighting to 
 improve hydroponic crop yields and efficiency, using inexpensive commodity hardware and the software in this repository.
 
-2. *Proof of concept or never mind the quality, feel the width.*
+2. *Proof of concept, or never mind the quality, feel the width.*
 
 Before explaining anything, below is the first raw data I've collected from 3 plants. It is truly shitfull data with periods missing and 
 some disturbances to the watering typical of real experiments. At least it shows what is possible. 
@@ -29,26 +29,25 @@ plant compared to the raw plot.
 Aside from the missing data and random watering/nudging, it's clear that each pot loses weight from transpiration faster when lights are on during the day than at night. 
 That's cool to see because it's biology we expect to see. Also, it's obvious that individual plants vary. These are all different phenotypes and some appear to be doing 
 far more transpiration than others. I have time lapse video that reflects the extremely fast growth of that same plant compared to the others so again, this is probably real.
-*What is being measured, how and why*
 
 3. *Understanding sources of variability in pot weights*
 
-One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated, but in the real world, measurements as always, 
-include real changes plus technical, systematic and random error. 
+One major aim is to gather data that tracks a plant's weight gain over time so the rate of change in biomass can be estimated, but in the real world, all physical measurements
+include technical and systematic sources of variation plus some random error.
 
 In order to estimate the rate of change, an uninterrupted time series of instantaneous weight measurements will be collected from a load cell 
 positioned underneath the pot. Sampling every 30 seconds seems to give reasonable detail without being too unwieldy. All plants are in hydroponic ("hempy") pots so 
 all nutrients are supplied in the watering solution. This avoids dealing with the inevitable loss of mass
 expected as soil became depleted of soluble nutrients over the growing period. 
 
-Note that the total mass at any time includes *a fixed component* comprising the pot plus the water free medium, plus *some variable 
-components*:
+Note that the total mass at any time includes *a fixed component* comprising the pot plus the water free medium. It's fixed but we are only interested in change so it 
+is not very interesting compared to the *variable components*:
 
-* the growing plant biomass
+* the instantaneous wet plant biomass
 
 * the mass of water held in the hydroponic medium 
 
-* the mass of water in any reservoir
+* the mass of water in the hempy reservoir
 
 We are trying to measure only the first one, but will need to take account of all other variable sources of change.
 
@@ -138,9 +137,9 @@ within each load cell/plant series and seem unlikely to make much difference to 
 
 		Something like:
 
-		> sudo pip3 install hx711
-		> sudo pip3 install RPi.GPIO
-		> sudo pip3 install paramiko
+		`>sudo pip3 install hx711
+		 >sudo pip3 install RPi.GPIO
+		 >sudo pip3 install paramiko`
 
 		should work.
 
@@ -162,7 +161,9 @@ within each load cell/plant series and seem unlikely to make much difference to 
 		For details and how to use, please read: https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b"*
 
 		* requirements.txt contains a long list of dependencies. In the python virtual environment you use for this project,
-		> pip3 install -f requirements.txt 
+		
+		`> pip3 install -f requirements.txt`
+		
 		should do the needful.
 
 		* Plots can be configured to use raw measured mass data. Most of my series have widely different dynamic ranges of mass over time. There are bigger and smaller pots, and 
