@@ -27,3 +27,4 @@ class BaseConfig():
 	SFTPKEYFILENAME = '/home/%s/.ssh/id_rsa' % USER
 	DELTA = 0.0005
 	NSD = 2 # sig digits
+	ALWAYSKEEPN = 50 # always add last 50 to plot so can see what's happening lately when seeking watering events!

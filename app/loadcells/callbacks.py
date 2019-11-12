@@ -26,7 +26,7 @@ import sys
 import os
 from dateutil import tz
 from tzlocal import get_localzone
-
+from config import BaseConfig
 from .loadcelldata import loadCellDataMulti
 
 NSD=3
@@ -51,8 +51,7 @@ def register_callbacks(dashapp):
 				# dat = df.sample(frac=useFrac)
 			# else:
 				# dat = df
-			dat = df
-			dat.sort_index(inplace=True)
+			
 			useFrac = float(useFrac)
 			if useFrac == 0.0:
 				useFrac = 0.0001
@@ -61,9 +60,14 @@ def register_callbacks(dashapp):
 			flask.session['useFrac'] = useFrac
 			if useFrac < 1.0:
 				dat = df.sample(frac=useFrac)
-				dat.sort_index(inplace=True)
+				keepe = df.shape[0]
+				keeps = max(0,keepe-BaseConfig.ALWAYSKEEPN)
+				alwaysIn = df.iloc[keeps:keepe,:]
+				dat = pd.concat([alwaysIn,dat],join="outer") # ensure last 20 minutes or so shown in full
 			else:
 				dat = df
+			dat.sort_index(inplace=True)
+
 			nr = df.shape[0]
 			ms = 5
 			if nr > 1000:
