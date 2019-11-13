@@ -60,10 +60,11 @@ def register_callbacks(dashapp):
 			flask.session['useFrac'] = useFrac
 			if useFrac < 1.0:
 				dat = df.sample(frac=useFrac)
-				keepe = df.shape[0]
-				keeps = max(0,keepe-BaseConfig.ALWAYSKEEPN)
-				alwaysIn = df.iloc[keeps:keepe,:]
-				dat = pd.concat([alwaysIn,dat],join="outer") # ensure last 20 minutes or so shown in full
+				keepend = df.shape[0]
+				keepstart = max(0,keepend - BaseConfig.ALWAYSKEEPN)
+				alwaysIn = df.iloc[keepstart:keepend,:]
+				dat = pd.concat([alwaysIn,dat],join="outer") 
+				# ensure last 20 minutes or so shown in full
 			else:
 				dat = df
 			dat.sort_index(inplace=True)
