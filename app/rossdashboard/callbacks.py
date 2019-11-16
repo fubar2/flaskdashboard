@@ -33,7 +33,7 @@ def register_callbacks(dashapp):
         "http://192.168.1.200/?cache=%d" % random.randint(0,30000)])
         
     def geth3():
-        return generate_table(["http://203.217.21.105:1050/jpg/1/image.jpg?cache=%d" % random.randint(0,30000),
+        return generate_table(["http://203.217.21.105:1050/jpg/2/image.jpg?cache=%d" % random.randint(0,30000),
         "http://webcams.bsch.com.au/bondi_beach/1252x940.jpg?cache=%d" % random.randint(0,30000),
         "http://192.168.1.108/snapshot.jpg?cache=%d" % random.randint(0,30000),
         "http://192.168.1.107/snapshot.jpg?cache=%d" % random.randint(0,30000)])
