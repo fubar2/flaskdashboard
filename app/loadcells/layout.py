@@ -4,9 +4,12 @@ from config import BaseConfig
 from .loadcelldata import SftpClient
 from paramiko import Transport, SFTPClient, RSAKey
 import os
+from datetime import datetime as dt
 
 filePath = ''
-useFrac = 1.0
+useFrac = 0.3 # 
+minStartDate=dt(2019, 10, 27)
+maxEndDate=dt.now()
 
 def fileChooser(returnv = False):
     """Need both the chooser list with values showing all files selected to start with
@@ -46,7 +49,7 @@ layout = html.Div(children=[
         html.Div(style={'width': 300, 'textAlign':'center'},
         children = [
             dcc.Store(id='localstore', storage_type='session',
-                data={'filePath': filePath, 'useFrac': 1, 'centerdata': False, 'movmedian': False}),
+                data={'filePath': filePath, 'useFrac': 0.4, 'centerdata': False, 'movmedian': False, 'minStartDate':minStartDate,'maxEndDate':maxEndDate}),
             html.Div('Files to load when reload button pressed',
                 style={"fontSize":"small", "width":299, "textAlign":"center", "color": "darkred"}),
                 dcc.Dropdown(
@@ -54,6 +57,15 @@ layout = html.Div(children=[
                     options=fileChooser(False),
                     value = fileChooser(True),
                     multi=True),
+            html.Div(title='Date range to show',style={"fontSize":"small", "width":299, "textAlign":"center", "color": "darkred"},children = [ 
+			dcc.DatePickerRange(
+				id='useDates',
+				min_date_allowed=minStartDate,
+				max_date_allowed=maxEndDate,
+				start_date=minStartDate,
+				end_date=maxEndDate,
+			),
+			html.Div(id='output-container-date-picker-range')]),
             html.Div("Subtract mean to 'center' each series?",
                 style={"fontSize":"small", "width":299, "textAlign":"center", "color": "darkred"}),
             html.Div(dcc.RadioItems(

@@ -32,7 +32,7 @@ from .loadcelldata import loadCellDataMulti
 NSD=3
 def register_callbacks(dashapp):
 
-	def figUpdate(useFrac,filePath, meanCenter, movMedian):
+	def figUpdate(useFrac,filePath, meanCenter, movMedian, minStartDate, maxEndDate):
 		"""
 		dcc.Store(id='localstore', storage_type='session',
 				data={'filePath': filePath, 'useFrac': 1, 'centerdata': False, 'movmedian': False}),
@@ -40,12 +40,17 @@ def register_callbacks(dashapp):
 		flask.session['filePath'] = filePath
 		flask.session['centerdata'] = meanCenter
 		flask.session['fmovmedian'] = movMedian
+		flask.session['minStartDate'] = minStartDate
+		flask.session['maxEndDate'] = maxEndDate
+		
 		lcd = loadCellDataMulti(NSD,filePath)
 		datal = []
 		for i, df in enumerate(lcd.dfs):
+			df.set_index(df['date'],inplace=True)
+			df = df.loc[minStartDate:maxEndDate,]
 			nr = df.shape[0]
 			if nr == 0:
-				return {}
+				return {data:[]}
 			# if nr > 5000:
 				# useFrac = 5000.0/nr
 				# dat = df.sample(frac=useFrac)
@@ -62,7 +67,7 @@ def register_callbacks(dashapp):
 				dat = df.sample(frac=useFrac)
 				keepend = df.shape[0]
 				keepstart = max(0,keepend - BaseConfig.ALWAYSKEEPN)
-				alwaysIn = df.iloc[keepstart:keepend,:]
+				alwaysIn = df.iloc[keepstart:keepend]
 				dat = pd.concat([alwaysIn,dat],join="outer") 
 				# ensure last 20 minutes or so shown in full
 			else:
@@ -137,16 +142,29 @@ def register_callbacks(dashapp):
 	@dashapp.callback(
 		Output('aplot', 'figure'),
 		[Input('reloadbutton', 'n_clicks_timestamp')],
-		[State('localstore', 'data'),State('frac','value'),State('chooser','value'),State('centerdata','value'),State('movmedian','value')])
-	def updateFigure(reloadtime,sessdat,frac,fpath,meancenter,movmedian):
-		return figUpdate(frac,fpath,meancenter,movmedian) 
+		[State('localstore', 'data'),State('frac','value'),State('chooser','value'),State('centerdata','value'),State('movmedian','value'),
+		 State('useDates','start_date'),State('useDates','end_date')])
+	def updateFigure(reloadtime,sessdat,frac,fpath,meancenter,movmedian,minstartdate,maxenddate):
+		return figUpdate(frac,fpath,meancenter,movmedian,minstartdate,maxenddate) 
 		
-	@dashapp.callback(
-		Output('localstore', 'data'),
-		[Input('chooser','value'),Input('frac','value')],
-		[State('localstore', 'data')]
-		)
-	def updateFigure2(fpath,frac,sessdat):
-		sessdat['filePath'] = fpath
-		sessdat['useFrac'] = frac
-		return sessdat
+
+	# @dashapp.callback(
+		# Output('output-container-date-picker-range', 'children'),
+		# [Input('useDates', 'start_date'),
+		 # Input('useDates', 'end_date')])
+	# def update_output(start_date, end_date):
+		# flask.session['minStartDate'] = start_date
+		# flask.session['maxEndDate'] = end_date
+		# string_prefix = 'You have selected: '
+		# if start_date is not None:
+			# start_date = dt.strptime(start_date.split(' ')[0], '%Y-%m-%d')
+			# start_date_string = start_date.strftime('%B %d, %Y')
+			# string_prefix = string_prefix + 'Start Date: ' + start_date_string + ' | '
+		# if end_date is not None:
+			# end_date = dt.strptime(end_date.split(' ')[0], '%Y-%m-%d')
+			# end_date_string = end_date.strftime('%B %d, %Y')
+			# string_prefix = string_prefix + 'End Date: ' + end_date_string
+		# if len(string_prefix) == len('You have selected: '):
+			# return 'Select a date to see it displayed here'
+		# else:
+			# return string_prefix
