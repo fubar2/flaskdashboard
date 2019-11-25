@@ -4,12 +4,13 @@ from config import BaseConfig
 from .loadcelldata import SftpClient
 from paramiko import Transport, SFTPClient, RSAKey
 import os
+from datetime import timedelta as td
 from datetime import datetime as dt
 
 filePath = ''
 useFrac = 0.3 # 
 minStartDate=dt(2019, 10, 27)
-maxEndDate=dt.now()
+maxEndDate=dt.now() + td(days=7)
 
 def fileChooser(returnv = False):
     """Need both the chooser list with values showing all files selected to start with
@@ -61,9 +62,9 @@ layout = html.Div(children=[
 			dcc.DatePickerRange(
 				id='useDates',
 				min_date_allowed=minStartDate,
-				max_date_allowed=maxEndDate,
-				start_date=minStartDate,
-				end_date=maxEndDate,
+				max_date_allowed=dt.now() + td(days=7),
+				start_date=dt.now() - td(days=14),
+				end_date=dt.now(),
 			),
 			html.Div(id='output-container-date-picker-range')]),
             html.Div("Subtract mean to 'center' each series?",

@@ -32,7 +32,7 @@ from .loadcelldata import loadCellDataMulti
 NSD=3
 def register_callbacks(dashapp):
 
-	def figUpdate(useFrac,filePath, meanCenter, movMedian, minStartDate, maxEndDate):
+	def figUpdate(useFrac,filePath, meanCenter, movMedian, startDate, endDate):
 		"""
 		dcc.Store(id='localstore', storage_type='session',
 				data={'filePath': filePath, 'useFrac': 1, 'centerdata': False, 'movmedian': False}),
@@ -40,14 +40,12 @@ def register_callbacks(dashapp):
 		flask.session['filePath'] = filePath
 		flask.session['centerdata'] = meanCenter
 		flask.session['fmovmedian'] = movMedian
-		flask.session['minStartDate'] = minStartDate
-		flask.session['maxEndDate'] = maxEndDate
+		flask.session['minStartDate'] = startDate
+		flask.session['maxEndDate'] = endDate
 		
 		lcd = loadCellDataMulti(NSD,filePath)
 		datal = []
 		for i, df in enumerate(lcd.dfs):
-			df.set_index(df['date'],inplace=True)
-			df = df.loc[minStartDate:maxEndDate,]
 			nr = df.shape[0]
 			if nr == 0:
 				return {data:[]}
@@ -72,6 +70,9 @@ def register_callbacks(dashapp):
 				# ensure last 20 minutes or so shown in full
 			else:
 				dat = df
+			dat.set_index(dat['date'],inplace=True)
+			dat = dat.loc[startDate:endDate,]
+
 			dat.sort_index(inplace=True)
 
 			nr = df.shape[0]
@@ -144,8 +145,8 @@ def register_callbacks(dashapp):
 		[Input('reloadbutton', 'n_clicks_timestamp')],
 		[State('localstore', 'data'),State('frac','value'),State('chooser','value'),State('centerdata','value'),State('movmedian','value'),
 		 State('useDates','start_date'),State('useDates','end_date')])
-	def updateFigure(reloadtime,sessdat,frac,fpath,meancenter,movmedian,minstartdate,maxenddate):
-		return figUpdate(frac,fpath,meancenter,movmedian,minstartdate,maxenddate) 
+	def updateFigure(reloadtime,sessdat,frac,fpath,meancenter,movmedian,startDate,endDate):
+		return figUpdate(frac,fpath,meancenter,movmedian,startDate,endDate) 
 		
 
 	# @dashapp.callback(
