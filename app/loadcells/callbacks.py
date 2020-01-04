@@ -28,8 +28,9 @@ from dateutil import tz
 from tzlocal import get_localzone
 from config import BaseConfig
 from .loadcelldata import loadCellDataMulti
-
+ 
 NSD=3
+nmedian = 5
 def register_callbacks(dashapp):
 
 	def figUpdate(useFrac,filePath, meanCenter, movMedian, startDate, endDate):
@@ -75,7 +76,7 @@ def register_callbacks(dashapp):
 
 			dat.sort_index(inplace=True)
 
-			nr = df.shape[0]
+			nr = dat.shape[0]
 			ms = 5
 			if nr > 1000:
 				ms = 3
@@ -84,7 +85,7 @@ def register_callbacks(dashapp):
 			yt = ""
 			if movMedian == "True":
 				yt = "Moving median "
-				xwork = dat['mass'].rolling(10).median()
+				xwork = dat['mass'].rolling(nmedian).median()
 			else:
 				xwork = dat.iloc[:,1]
 			if meanCenter == "True":

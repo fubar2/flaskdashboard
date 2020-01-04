@@ -25,9 +25,10 @@ class BaseConfig():
 	SFTPPORT = 22
 	SFTPPASSWORD = ''
 	SFTPKEYFILENAME = '/home/%s/.ssh/id_rsa' % USER
-	DELTADOWN = 0.005
+	DELTADOWN = 0.0001
 	DELTAUP = 0.05
 	MINDURATION = 5 # minutes - ignore shorter events as unlikely to be informative
 	NSD = 2 # sig digits
 	ALWAYSKEEPN = 50 # always add last 50 to plot so can see what's happening lately when seeking watering events!
 	CRONLOG='/home/ross/rossgit/pyCronPlug/watercron.log'
+	SEGTABFNAME='/home/ross/rossgit/flaskdashboard/app/segments.xls'

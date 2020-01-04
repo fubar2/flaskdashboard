@@ -8,7 +8,7 @@ from datetime import timedelta as td
 from datetime import datetime as dt
 
 filePath = ''
-useFrac = 0.3 # 
+useFrac = 0.3 #  
 minStartDate=dt(2019, 10, 27)
 maxEndDate=dt.now() + td(days=7)
 
